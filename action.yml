@@ -1,9 +1,9 @@
-name: Set up node using nvm
-description: Sets up a specific node.js version using nvm
+name: NVM Setup Node
+description: Sets up a specific node version using nvm
 author: irby
 inputs:
   node-version:
-    description: The node.js version to use according to nvm. Uses the version specified in .nvmrc if omitted.
+    description: Install specific version of Node using NVM. If omitted, it will use the .nvmrc value at your project root (if available) or fall back to the value in .nvmrc for this action.
     default: ""
   node-mirror:
     description: The node.js mirror to use
