@@ -7,23 +7,30 @@ const { promises: fs } = require("fs");
 
 // Utilize @pkgjs/nv to resolve before forwarding to nvm / nvm-windows
 async function resolveVersion(version, mirror) {
-  let query = version;
-  switch (query) {
-    case "node": { query = "current"; break; }
-    case "lts/*": { query = "lts_latest"; break; }
-    case "latest": { query = "all"; break; }
-    default: {
-      query = await fs.readFile(".nvmrc", "utf8").catch(err => {
-        console.error("Failed to read .nvmrc file", err);
-      });
+  if (version) {
+    let query = version;
+    switch (query) {
+      case "node": { query = "current"; break; }
+      case "lts/*": { query = "lts_latest"; break; }
+      case "latest": { query = "all"; break; }
+    }
+    const versions = await nv(query, { mirror });
+    if (versions.length) {
+      versions.sort((a, b) => semver.rcompare(a.version, b.version));
+      return versions[0].version;
     }
   }
-  const versions = await nv(query, { mirror });
-  if (versions.length) {
-    versions.sort((a, b) => semver.rcompare(a.version, b.version));
-    return versions[0].version;
-  }
-  return version;
+  
+  core.info("Attempting to read .nvmrc from repository-level .nvmrc...");
+
+  query = await fs.readFile(".nvmrc", "utf8")
+              .then(data => {
+                core.info(`Success. Value read from repository-level .nvmrc: ${data}`)
+                return data;
+              })  
+              .catch(_ => core.info("Failed to read repository-level .nvmrc. Defaulting to action-level .nvmrc"));
+  
+  return query ?? version;
 }
 
 (async () => {
