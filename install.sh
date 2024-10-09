@@ -8,7 +8,7 @@ git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --
 popd
 chmod +x "$NVM_DIR/nvm.sh"
 . "$NVM_DIR/nvm.sh" --no-use
-nvm install "$1"
+nvm install "$1" -b
 echo "SETUP_NODE_NVM_NVM: $NVM_DIR/nvm.sh"
 echo "SETUP_NODE_NVM_NODE: $(which node)"
 echo "SETUP_NODE_NVM_NPM: $(which npm)"

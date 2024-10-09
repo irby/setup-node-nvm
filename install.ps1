@@ -8,7 +8,7 @@ Expand-Archive nvm.zip -DestinationPath "$NVM_HOME"
 New-Item -Path "$NVM_HOME\settings.txt" -ItemType File 
 nvm.exe root $NVM_HOME
 nvm.exe node_mirror $args[1]
-nvm.exe install $args[0]
+nvm.exe install $args[0] -b
 nvm.exe use $args[0]
 echo "SETUP_NODE_NVM_NVM: $NVM_HOME"
 echo "SETUP_NODE_NVM_NODE: $NVM_HOME\nodejs\node.exe"
